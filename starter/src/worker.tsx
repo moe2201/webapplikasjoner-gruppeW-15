@@ -3,6 +3,9 @@ import { render, route } from "rwsdk/router";
 import { Document } from "@/app/Document";
 import { setCommonHeaders } from "@/app/headers";
 import { Home } from "@/app/pages/Home";
+import { Services } from "@/app/pages/Services";
+import { Portfolio } from "@/app/pages/Portfolio";
+import { Booking } from "@/app/pages/Booking";
 
 /**
  * Alt som ligger på `ctx` for én forespørsel.
@@ -23,7 +26,13 @@ const app = defineApp([
   ),
 
   // Sider. render(Document, [...]) pakker dem i et helt HTML-dokument.
-  render(Document, [route("/", Home)]),
+  render(Document, [
+    route("/", Home),
+    route("/services", Services),
+    route("/portfolio", Portfolio),
+    route("/booking", Booking),
+  ]),
+  
 ]);
 
 export default { fetch: app.fetch };
