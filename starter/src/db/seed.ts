@@ -12,8 +12,12 @@ export const seedData = async (env: Env) => {
   const db = drizzle(env.DB);
 
   // Tøm først, så seed kan kjøres om igjen uten å doble alt.
-  await db.delete(tasks);
-  await db.delete(users);
+  await db.delete(bookings);
+  await db.delete(services);
+  await db.insert(services).values([
+    {id: "logo-design", name: "Logo Design", description: "Profesjonell logo", price: 1500, durationMinutes: 60},
+    {id: "nettside", name: "Nettside", description: "Enkelt websted", price: 5000, durationMinutes: 120},
+  ]);
 
   // Brukerne må inn før oppgavene: fremmednøkkelen krever at brukeren finnes.
   // Databasen nekter hvis dere tar rekkefølgen feil, og det er en god ting.
