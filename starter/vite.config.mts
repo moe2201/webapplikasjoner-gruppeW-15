@@ -35,5 +35,9 @@ export default defineConfig({
     // another one. Override with `--port`, which Playwright uses.
     port: 5173,
     strictPort: true,
-  },
+
+    watch: {
+    ignored: ["**/wrangler/**"],
+    },
+  }
 });
