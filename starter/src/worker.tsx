@@ -2,37 +2,51 @@ import { defineApp } from "rwsdk/worker";
 import { render, route } from "rwsdk/router";
 import { Document } from "@/app/Document";
 import { setCommonHeaders } from "@/app/headers";
+import { auth } from "@/lib/auth";
 import { Home } from "@/app/pages/Home";
 import { Services } from "@/app/pages/Services";
 import { Portfolio } from "@/app/pages/Portfolio";
 import { Booking } from "@/app/pages/Booking";
+import { Dashboard } from "@/app/pages/Dashboard";
+import { Login } from "@/app/pages/Login";
 
-/**
- * Alt som ligger på `ctx` for én forespørsel.
- *
- * Tom nå. Legger dere til `user` her, blir `ctx.user` typet i hele appen,
- * fordi types/rw.d.ts mater denne typen inn i rwsdk.
- */
-export type AppContext = {};
+export type AppContext = {
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+};
+
+  // Stopper forespørslen og sender til /login hvis ingen er logget inn
+  const requireAuth = ({ctx}: {ctx: AppContext}) => {
+    if (!ctx.user) {
+      throw new Response(null, {
+        status: 302,
+        headers: { Location: "/login" }
+      });
+    }
+};
 
 const app = defineApp([
-  // Middleware. Kjører for hver forespørsel, i rekkefølgen de står.
   setCommonHeaders(),
 
-  // API-rute. Ligger UTENFOR render(), så svaret er akkurat det handleren
-  // returnerer: JSON, uten HTML-skall rundt.
-  route("/api/status", () =>
-    Response.json({ status: "ok", version: "0.1.0" })
-  ),
+  async ({ctx, request }) => {
+    const session = await auth.api.getSession({headers: request.headers});
+    ctx.user = session?.user;
+  },
+  route("/api/auth/*", ({ request }) => auth.handler(request)),
+  route("/api/status", () => Response.json({ status: "ok" })),
 
-  // Sider. render(Document, [...]) pakker dem i et helt HTML-dokument.
   render(Document, [
     route("/", Home),
     route("/services", Services),
     route("/portfolio", Portfolio),
-    route("/booking", Booking),
+    route("/login", Login),
+    route("/booking", [requireAuth, Booking]),
+    route("/dashboard", [requireAuth, Dashboard]),
   ]),
-  
 ]);
 
-export default { fetch: app.fetch };
+export default {fetch: app.fetch};
+
