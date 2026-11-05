@@ -41,6 +41,7 @@ export const setCommonHeaders =
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: blob:",
         "media-src 'self' data: blob:",
+        "connect-src 'self' https://api.emailjs.com https://api.emailjs.com/v1.0/email/send",
         "frame-ancestors 'self'",
         "object-src 'none'",
       ].join("; ")
