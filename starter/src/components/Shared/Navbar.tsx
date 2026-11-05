@@ -1,3 +1,5 @@
+import { LogoutButton } from "./LogoutButton";
+
 export function Navbar() {
     return (
         <nav className = "flex items-center justify-between border-b bg-white px-8 py-4">
@@ -7,7 +9,10 @@ export function Navbar() {
                 <li><a href="/services">Tjenester</a></li>
                 <li><a href="/portfolio">Portfolio</a></li>
                 <li><a href="/booking">Booking</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/login">Logg inn</a></li>
+                <li><LogoutButton /></li>
             </ul>
-    </nav>
+        </nav>
     );
 }
