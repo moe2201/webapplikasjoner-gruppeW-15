@@ -2,6 +2,7 @@ import { defineApp } from "rwsdk/worker";
 import { render, route } from "rwsdk/router";
 import { Document } from "@/app/Document";
 import { setCommonHeaders } from "@/app/headers";
+import { auth } from "@/lib/auth";
 import { Home } from "@/app/pages/Home";
 import { Services } from "@/app/pages/Services";
 import { Portfolio } from "@/app/pages/Portfolio";
