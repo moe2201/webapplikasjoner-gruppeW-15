@@ -40,7 +40,7 @@ const app = defineApp([
   route("/api/auth/*", ({ request }) => auth.handler(request)),
   route("/api/status", () => Response.json({ status: "ok" })),
   route("/api/bookings", async ({ctx, request}) => {
-    if (request.method === "GET") {
+    if (request.method !== "GET") {
       return Response.json( {error: "Method not allowed" }, { status: 405 });
     }
     if (!ctx.user) {
