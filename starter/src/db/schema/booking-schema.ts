@@ -10,3 +10,5 @@ export const bookings = sqliteTable( "bookings", {
   time: text("time").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull().$default(() => new Date()), 
 });
+
+export type Booking = typeof bookings.$inferSelect;

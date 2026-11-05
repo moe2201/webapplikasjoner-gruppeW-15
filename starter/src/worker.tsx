@@ -9,6 +9,8 @@ import { Portfolio } from "@/app/pages/Portfolio";
 import { Booking } from "@/app/pages/Booking";
 import { Dashboard } from "@/app/pages/Dashboard";
 import { Login } from "@/app/pages/Login";
+import { db } from "@/db";
+import {listBookings } from "@/lib/booking-service";
 
 export type AppContext = {
   user?: {
@@ -37,6 +39,16 @@ const app = defineApp([
   },
   route("/api/auth/*", ({ request }) => auth.handler(request)),
   route("/api/status", () => Response.json({ status: "ok" })),
+  route("/api/bookings", async ({ctx, request}) => {
+    if (request.method === "GET") {
+      return Response.json( {error: "Method not allowed" }, { status: 405 });
+    }
+    if (!ctx.user) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const bookings = await listBookings(db, ctx.user.id);
+    return Response.json(bookings, { status: 200 });
+  }),
 
   render(Document, [
     route("/", Home),
